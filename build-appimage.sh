@@ -32,7 +32,7 @@ rm -rf vigra-build
 mkdir -p vigra-build || exit 1
 cd vigra-build || exit 1
 cmake3 -DWITH_OPENEXR=1  -DCMAKE_INSTALL_PREFIX=/usr/local ../ || exit 1
-make -j install || exit 1
+make -j 3 install || exit 1
 
 
 echo ""
@@ -50,7 +50,7 @@ mkdir enblend-build || exit 1
 cd enblend-build || exit 1
 #CXXFLAGS='-std=gnu++1y' CPPFLAGS='-I/opt/rh/devtoolset-4/root/usr/include/c++/5.3.1/experimental' 
 cmake3 -DSOURCE_BASE_DIR="/work/enblend" -DCMAKE_INSTALL_PREFIX=/usr/local ../ || exit 1
-make -j install || exit 1
+make -j 3 install || exit 1
 cd ..
 
 
@@ -64,7 +64,7 @@ export PATH=$HOME/.cargo/bin:$PATH
 (cd /work && curl https://sh.rustup.rs -sSf > ./r.sh && bash ./r.sh -y && \
 rm -rf librsvg* && wget http://ftp.gnome.org/pub/gnome/sources/librsvg/2.40/librsvg-2.40.16.tar.xz && \
 tar xvf librsvg-2.40.16.tar.xz && cd librsvg-2.40.16 && \
-./configure --prefix=/usr/local && make -j install) || exit 1
+./configure --prefix=/usr/local && make -j 3 install) || exit 1
 
 
 
@@ -82,7 +82,7 @@ cd wxWidgets-3.0.4 || exit 1
 mkdir -p wx-build || exit 1
 cd wx-build || exit 1
 ../configure --enable-unicode --with-opengl --prefix=/usr/local || exit 1
-make -j install || exit 1
+make -j 3 install || exit 1
 
 
 echo ""
@@ -103,7 +103,7 @@ cmake3 -DCMAKE_INSTALL_PREFIX=/usr/local \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_HSI:BOOL=OFF \
 	-DUNIX_SELF_CONTAINED_BUNDLE:BOOL=ON ../ || exit 1
-make -j install || exit 1
+make -j 3 install || exit 1
 cd ..
 
 
