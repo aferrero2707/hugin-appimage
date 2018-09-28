@@ -7,7 +7,7 @@ yum install -y centos-release-scl || exit 1
 yum install -y devtoolset-4-gcc devtoolset-4-gcc-c++ || exit 1
 
 #yum group install -y "Development Tools"
-(yum install -y autoconf automake libtool make cmake3 mercurial qt5-qtbase-devel qt5-linguist git exiv2-devel alglib-devel zlib-devel wget cairo libtiff-devel libjpeg-turbo-devel gtk2-devel OpenEXR-devel glew-devel libpano13-devel boost-devel lcms2-devel sqlite-devel libcroco-devel libxml2-devel gobject-introspection-devel cairo-gobject-devel gsl-devel) || exit 1
+(yum install -y autoconf automake libtool make cmake3 mercurial bzip2 git exiv2-devel zlib-devel wget cairo libtiff-devel libjpeg-turbo-devel gtk2-devel OpenEXR-devel glew-devel libpano13-devel boost-devel lcms2-devel sqlite-devel libcroco-devel libxml2-devel gobject-introspection-devel cairo-gobject-devel gsl-devel) || exit 1
 
 source scl_source enable devtoolset-4
 
