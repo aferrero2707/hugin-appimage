@@ -79,8 +79,8 @@ rm -rf wxWidgets-*
 wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.4/wxWidgets-3.0.4.tar.bz2 || exit 1
 tar xvf wxWidgets-3.0.4.tar.bz2 || exit 1
 cd wxWidgets-3.0.4 || exit 1
-mkdir build || exit 1
-cd build || exit 1
+mkdir -p wx-build || exit 1
+cd wx-build || exit 1
 ../configure --enable-unicode --with-opengl --prefix=/usr/local || exit 1
 make -j install || exit 1
 
@@ -92,10 +92,10 @@ echo "Building and installing hugin"
 echo ""
 
 cd /work
-rm -rf hdrmerge
+rm -rf hugin
 hg clone http://hg.code.sf.net/p/hugin/hugin hugin || exit 1
 cd hugin || exit 1
-patch -N -p0 < /sources/hugin-bundle.patch
+patch -N -p1 < /sources/hugin-bundle.patch
 rm -rf hugin-build
 mkdir -p hugin-build || exit 1
 cd hugin-build || exit 1
