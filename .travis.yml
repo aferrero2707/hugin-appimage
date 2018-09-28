@@ -14,9 +14,9 @@ addons:
       - wget
 
 before_script:
-    - git clone https://github.com/jcelaya/hdrmerge.git
-    - cd hdrmerge
-    - bash ../check_commit.sh master
+    #- git clone https://github.com/jcelaya/hdrmerge.git
+    #- cd hdrmerge
+    #- bash ../check_commit.sh master
     #- 'if [ -e travis.cancel ]; then
     #      exit 0;
     #  fi'
