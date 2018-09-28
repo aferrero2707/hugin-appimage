@@ -30,8 +30,7 @@ git clone https://github.com/ukoethe/vigra.git || exit 1
 rm -rf vigra-build
 mkdir -p vigra-build || exit 1
 cd vigra-build || exit 1
-cmake3 -DWITH_OPENEXR=1  -DCMAKE_INSTALL_PREFIX=/usr/local \
-/sources/vigra || exit 1
+cmake3 -DWITH_OPENEXR=1  -DCMAKE_INSTALL_PREFIX=/usr/local ../ || exit 1
 make -j install || exit 1
 
 
@@ -102,8 +101,7 @@ cd hugin-build || exit 1
 cmake3 -DCMAKE_INSTALL_PREFIX=/usr/local \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_HSI:BOOL=OFF \
-	-DUNIX_SELF_CONTAINED_BUNDLE:BOOL=ON \
-	/sources/hugin-new || exit 1
+	-DUNIX_SELF_CONTAINED_BUNDLE:BOOL=ON ../ || exit 1
 make -j install || exit 1
 cd ..
 
