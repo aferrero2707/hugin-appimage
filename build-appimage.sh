@@ -27,6 +27,7 @@ echo ""
 cd /work
 rm -rf vigra
 git clone https://github.com/ukoethe/vigra.git || exit 1
+cd vigra || exit 1
 rm -rf vigra-build
 mkdir -p vigra-build || exit 1
 cd vigra-build || exit 1
