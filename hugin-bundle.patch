@@ -69,6 +69,42 @@ diff -r -c hugin/src/hugin1/hugin/huginApp.cpp hugin-new/src/hugin1/hugin/huginA
   #else
       // add the locale directory specified during configure
       m_xrcPrefix = wxT(INSTALL_XRC_DIR);
+diff -r -c hugin/src/hugin1/ptbatcher/PTBatcherGUI.cpp hugin-new/src/hugin1/ptbatcher/PTBatcherGUI.cpp
+*** hugin/src/hugin1/ptbatcher/PTBatcherGUI.cpp	Thu Sep 27 16:36:55 2018
+--- hugin-new/src/hugin1/ptbatcher/PTBatcherGUI.cpp	Sat Sep 29 11:53:49 2018
+***************
+*** 26,31 ****
+--- 26,34 ----
+  
+  #include "PTBatcherGUI.h"
+  #include <wx/cshelp.h>
++ #ifdef UNIX_SELF_CONTAINED_BUNDLE
++ #include <wx/stdpaths.h>
++ #endif
+  #ifdef __WXMSW__
+  #include <wx/stdpaths.h>
+  #endif
+***************
+*** 102,107 ****
+--- 105,122 ----
+          }
+  
+      }
++ 
++ #elif defined UNIX_SELF_CONTAINED_BUNDLE
++     // initialize paths
++     {
++       wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
++       exePath.RemoveLastDir();
++       const wxString huginRoot(exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
++       m_xrcPrefix = huginRoot + wxT("share/hugin/xrc/");
++ 
++       // locale setup
++       m_locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
++     }
+  #else
+      // add the locale directory specified during configure
+      m_xrcPrefix = wxT(INSTALL_XRC_DIR);
 diff -r -c hugin/src/hugin_config.h.in.cmake hugin-new/src/hugin_config.h.in.cmake
 *** hugin/src/hugin_config.h.in.cmake	Thu Sep 27 16:36:58 2018
 --- hugin-new/src/hugin_config.h.in.cmake	Thu Sep 27 18:53:12 2018
