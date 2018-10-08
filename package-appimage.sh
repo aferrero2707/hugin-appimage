@@ -33,7 +33,9 @@ source /work/appimage-helper-scripts/bundle-gtk2.sh
 
 
 #get_apprun
-cp -a /sources/AppRun "$APPDIR/AppRun"
+cp -a /sources/AppRun "$APPDIR/AppRun" || exit 1
+cp "/sources/${APP}.appdata.xml" "$APPDIR/usr/share/metainfo/${APP}.appdata.xml"
+
 
 # Copy Qt5 plugins
 QT5PLUGINDIR=$(pkg-config --variable=plugindir Qt5)
