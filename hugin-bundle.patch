@@ -15,6 +15,49 @@ diff -r -c hugin/CMakeLists.txt hugin-new/CMakeLists.txt
   
   IF(BUILD_HSI)
 Only in hugin-new: rev.txt
+diff -r -c hugin/src/hugin1/calibrate_lens/LensCalApp.cpp hugin-new/src/hugin1/calibrate_lens/LensCalApp.cpp
+*** hugin/src/hugin1/calibrate_lens/LensCalApp.cpp	Thu Sep 27 16:36:56 2018
+--- hugin-new/src/hugin1/calibrate_lens/LensCalApp.cpp	Thu Nov  1 18:26:37 2018
+***************
+*** 72,77 ****
+--- 72,87 ----
+          return false;
+      }
+      m_xrcPrefix = thePath + wxT("/");
++ #elif defined UNIX_SELF_CONTAINED_BUNDLE
++     // initialize paths
++     {
++       wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
++       exePath.RemoveLastDir();
++       const wxString huginRoot=exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
++       // add the locale directory specified during configure
++       m_xrcPrefix = huginRoot + wxT("share/hugin/xrc/");
++       locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
++     }
+  #else
+      // add the locale directory specified during configure
+      m_xrcPrefix = wxT(INSTALL_XRC_DIR);
+diff -r -c hugin/src/hugin1/executor/hugin_executor.cpp hugin-new/src/hugin1/executor/hugin_executor.cpp
+*** hugin/src/hugin1/executor/hugin_executor.cpp	Thu Sep 27 16:36:56 2018
+--- hugin-new/src/hugin1/executor/hugin_executor.cpp	Thu Nov  1 18:27:40 2018
+***************
+*** 71,76 ****
+--- 71,85 ----
+          m_locale.AddCatalogLookupPathPrefix(exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR) + wxT("share\\locale"));
+  #elif defined __WXMAC__ && defined MAC_SELF_CONTAINED_BUNDLE
+          // nothing to do
++ #elif defined UNIX_SELF_CONTAINED_BUNDLE
++         // initialize paths
++         {
++           wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
++           exePath.RemoveLastDir();
++           const wxString huginRoot=exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
++           // add the locale directory specified during configure
++           m_locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
++         }
+  #else
+          // add the locale directory specified during configure
+          m_locale.AddCatalogLookupPathPrefix(wxT(INSTALL_LOCALE_DIR));
 diff -r -c hugin/src/hugin1/hugin/huginApp.cpp hugin-new/src/hugin1/hugin/huginApp.cpp
 *** hugin/src/hugin1/hugin/huginApp.cpp	Thu Sep 27 16:36:59 2018
 --- hugin-new/src/hugin1/hugin/huginApp.cpp	Thu Sep 27 21:48:16 2018
@@ -105,6 +148,48 @@ diff -r -c hugin/src/hugin1/ptbatcher/PTBatcherGUI.cpp hugin-new/src/hugin1/ptba
   #else
       // add the locale directory specified during configure
       m_xrcPrefix = wxT(INSTALL_XRC_DIR);
+diff -r -c hugin/src/hugin1/stitch_project/hugin_stitch_project.cpp hugin-new/src/hugin1/stitch_project/hugin_stitch_project.cpp
+*** hugin/src/hugin1/stitch_project/hugin_stitch_project.cpp	Thu Sep 27 16:36:55 2018
+--- hugin-new/src/hugin1/stitch_project/hugin_stitch_project.cpp	Fri Nov  2 09:41:35 2018
+***************
+*** 29,37 ****
+  #include "panoinc.h"
+  
+  #include <wx/wfstream.h>
+! #ifdef __WXMSW__
+  #include <wx/stdpaths.h>
+! #endif
+  
+  #include <fstream>
+  #include <sstream>
+--- 29,37 ----
+  #include "panoinc.h"
+  
+  #include <wx/wfstream.h>
+! //#ifdef __WXMSW__
+  #include <wx/stdpaths.h>
+! //#endif
+  
+  #include <fstream>
+  #include <sstream>
+***************
+*** 286,291 ****
+--- 286,300 ----
+      // locale setup
+      m_locale.AddCatalogLookupPathPrefix(exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR) + wxT("share\\locale"));
+  
++ #elif defined UNIX_SELF_CONTAINED_BUNDLE
++     // initialize paths
++     {
++       wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
++       exePath.RemoveLastDir();
++       const wxString huginRoot=exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
++       // add the locale directory specified during configure
++       m_locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
++     }
+  #else
+      // add the locale directory specified during configure
+      m_locale.AddCatalogLookupPathPrefix(wxT(INSTALL_LOCALE_DIR));
 diff -r -c hugin/src/hugin_config.h.in.cmake hugin-new/src/hugin_config.h.in.cmake
 *** hugin/src/hugin_config.h.in.cmake	Thu Sep 27 16:36:58 2018
 --- hugin-new/src/hugin_config.h.in.cmake	Thu Sep 27 18:53:12 2018

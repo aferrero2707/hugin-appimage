@@ -72,6 +72,10 @@ copy_gcc_libs
 #find usr/ -type f -exec sed -i -e "s|/usr|././|g" {} \;
 
 
+(cd /work/appimage-helper-scripts/appimage-exec-wrapper2 && make && cp -a exec.so "$APPDIR/usr/lib/exec_wrapper2.so") || exit 1
+
+
+
 # Workaround for:
 # GLib-GIO-ERROR **: Settings schema 'org.gtk.Settings.FileChooser' is not installed
 # when trying to use the file open dialog
