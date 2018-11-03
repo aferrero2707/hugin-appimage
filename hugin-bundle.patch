@@ -1,6 +1,16 @@
 diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp
 *** hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 19:12:42 2018
---- hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 19:18:23 2018
+--- hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 23:35:05 2018
+***************
+*** 36,41 ****
+--- 36,42 ----
+  
+  #include <hugin_utils/platform.h>
+  #include <wx/app.h>
++ #include <wx/stdpaths.h>
+  #include "hugin/config_defaults.h"
+  #include "panodata/StandardImageVariableGroups.h"
+  #include "icpfind/AutoCtrlPointCreator.h"
 ***************
 *** 85,91 ****
       else
@@ -10,7 +20,7 @@ diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin
       };
   };
   
---- 85,97 ----
+--- 86,98 ----
       else
       {
           wxString cmdline=prog+wxT(" ")+args;
@@ -25,6 +35,26 @@ diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin
   };
   
 ***************
+*** 378,383 ****
+--- 385,401 ----
+      }
+      // create suitable command line..
+      wxString autopanoExe = GetProgPath(setting.GetProg());
++ #if defined UNIX_SELF_CONTAINED_BUNDLE
++     {
++       wxFileName autopanoExeName = autopanoExe;
++       if( autopanoExeName.IsRelative() ) {
++         wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
++         wxString binPath = exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
++         wxString autopanoExeFull = binPath + autopanoExe;
++         autopanoExe = autopanoExeFull;
++       }
++     }
++ #endif
+      if(setting.IsTwoStepDetector())
+      {
+          std::vector<wxString> keyFiles(pano.getNrOfImages());
+***************
 *** 478,484 ****
   
       ret_value = 0;
@@ -33,7 +63,7 @@ diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin
   
       if (ret_value == HUGIN_EXIT_CODE_CANCELLED) {
           return cps;
---- 484,490 ----
+--- 496,502 ----
   
       ret_value = 0;
       // use MyExternalCmdExecDialog
