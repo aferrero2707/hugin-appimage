@@ -67,7 +67,7 @@ export PATH=$HOME/.cargo/bin:$PATH
 if [ ! -e /work/librsvg-2.40.16 ]; then
 (cd /work && curl https://sh.rustup.rs -sSf > ./r.sh && bash ./r.sh -y && \
 rm -rf librsvg* && wget http://ftp.gnome.org/pub/gnome/sources/librsvg/2.40/librsvg-2.40.16.tar.xz && \
-tar xvf librsvg-2.40.16.tar.xz && cd librsvg-2.40.16 && \
+tar xf librsvg-2.40.16.tar.xz && cd librsvg-2.40.16 && \
 ./configure --prefix=/usr/local && make -j 3 install) || exit 1
 fi
 
@@ -83,7 +83,7 @@ cd /work
 if [ ! -e wxWidgets-3.0.4 ]; then
 #rm -rf wxWidgets-*
 wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.4/wxWidgets-3.0.4.tar.bz2 || exit 1
-tar xvf wxWidgets-3.0.4.tar.bz2 || exit 1
+tar xf wxWidgets-3.0.4.tar.bz2 || exit 1
 cd wxWidgets-3.0.4 || exit 1
 mkdir -p wx-build || exit 1
 cd wx-build || exit 1
