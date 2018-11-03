@@ -1,120 +1,6 @@
-Only in hugin-new/.hg/cache: branchheads-base
-Only in hugin-new/.hg/cache: tags
-diff -r -c hugin/CMakeLists.txt hugin-new/CMakeLists.txt
-*** hugin/CMakeLists.txt	Thu Sep 27 16:36:54 2018
---- hugin-new/CMakeLists.txt	Thu Sep 27 18:58:00 2018
-***************
-*** 433,438 ****
---- 433,440 ----
-  FIND_PACKAGE(SQLite3 REQUIRED)
-  INCLUDE_DIRECTORIES(${SQLITE3_INCLUDE_DIR})
-  
-+ OPTION(UNIX_SELF_CONTAINED_BUNDLE "Build a self-contained bundle under Unix systems" OFF)
-+ 
-  OPTION(BUILD_HSI "Python Scripting Interface" OFF)
-  
-  IF(BUILD_HSI)
-Only in hugin-new: rev.txt
-diff -r -c hugin/src/hugin1/calibrate_lens/LensCalApp.cpp hugin-new/src/hugin1/calibrate_lens/LensCalApp.cpp
-*** hugin/src/hugin1/calibrate_lens/LensCalApp.cpp	Thu Sep 27 16:36:56 2018
---- hugin-new/src/hugin1/calibrate_lens/LensCalApp.cpp	Thu Nov  1 18:26:37 2018
-***************
-*** 72,77 ****
---- 72,87 ----
-          return false;
-      }
-      m_xrcPrefix = thePath + wxT("/");
-+ #elif defined UNIX_SELF_CONTAINED_BUNDLE
-+     // initialize paths
-+     {
-+       wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
-+       exePath.RemoveLastDir();
-+       const wxString huginRoot=exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
-+       // add the locale directory specified during configure
-+       m_xrcPrefix = huginRoot + wxT("share/hugin/xrc/");
-+       locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
-+     }
-  #else
-      // add the locale directory specified during configure
-      m_xrcPrefix = wxT(INSTALL_XRC_DIR);
-diff -r -c hugin/src/hugin1/executor/hugin_executor.cpp hugin-new/src/hugin1/executor/hugin_executor.cpp
-*** hugin/src/hugin1/executor/hugin_executor.cpp	Thu Sep 27 16:36:56 2018
---- hugin-new/src/hugin1/executor/hugin_executor.cpp	Thu Nov  1 18:27:40 2018
-***************
-*** 71,76 ****
---- 71,85 ----
-          m_locale.AddCatalogLookupPathPrefix(exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR) + wxT("share\\locale"));
-  #elif defined __WXMAC__ && defined MAC_SELF_CONTAINED_BUNDLE
-          // nothing to do
-+ #elif defined UNIX_SELF_CONTAINED_BUNDLE
-+         // initialize paths
-+         {
-+           wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
-+           exePath.RemoveLastDir();
-+           const wxString huginRoot=exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
-+           // add the locale directory specified during configure
-+           m_locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
-+         }
-  #else
-          // add the locale directory specified during configure
-          m_locale.AddCatalogLookupPathPrefix(wxT(INSTALL_LOCALE_DIR));
-diff -r -c hugin/src/hugin1/hugin/huginApp.cpp hugin-new/src/hugin1/hugin/huginApp.cpp
-*** hugin/src/hugin1/hugin/huginApp.cpp	Thu Sep 27 16:36:59 2018
---- hugin-new/src/hugin1/hugin/huginApp.cpp	Thu Sep 27 21:48:16 2018
-***************
-*** 57,65 ****
-  #include "base_wx/platform.h"
-  #include "base_wx/huginConfig.h"
-  #include <wx/cshelp.h>
-  #ifdef __WXMSW__
-  #include <wx/dir.h>
-- #include <wx/stdpaths.h>
-  #if wxCHECK_VERSION(3,1,0)
-  #include <wx/taskbarbutton.h>
-  #endif
---- 57,65 ----
-  #include "base_wx/platform.h"
-  #include "base_wx/huginConfig.h"
-  #include <wx/cshelp.h>
-+ #include <wx/stdpaths.h>
-  #ifdef __WXMSW__
-  #include <wx/dir.h>
-  #if wxCHECK_VERSION(3,1,0)
-  #include <wx/taskbarbutton.h>
-  #endif
-***************
-*** 250,256 ****
-      }
-  #endif
-      
-! 	
-  #else
-      // add the locale directory specified during configure
-      m_xrcPrefix = wxT(INSTALL_XRC_DIR);
---- 250,269 ----
-      }
-  #endif
-      
-! #elif defined UNIX_SELF_CONTAINED_BUNDLE
-!     // initialize paths
-!     {
-!       wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
-!       m_utilsBinDir = exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
-!       exePath.RemoveLastDir();
-!       const wxString huginRoot=exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
-!       m_xrcPrefix = huginRoot + wxT("share/hugin/xrc/");
-!       m_DataDir = huginRoot + wxT("share/hugin/data/");
-! 
-!       // locale setup
-!       locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
-!     }
-! 
-  #else
-      // add the locale directory specified during configure
-      m_xrcPrefix = wxT(INSTALL_XRC_DIR);
 diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp
-*** hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Thu Sep 27 16:36:55 2018
---- hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 17:39:43 2018
+*** hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 19:12:42 2018
+--- hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 19:18:23 2018
 ***************
 *** 85,91 ****
       else
@@ -138,94 +24,20 @@ diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin
       };
   };
   
-diff -r -c hugin/src/hugin1/ptbatcher/PTBatcherGUI.cpp hugin-new/src/hugin1/ptbatcher/PTBatcherGUI.cpp
-*** hugin/src/hugin1/ptbatcher/PTBatcherGUI.cpp	Thu Sep 27 16:36:55 2018
---- hugin-new/src/hugin1/ptbatcher/PTBatcherGUI.cpp	Sat Sep 29 11:53:49 2018
 ***************
-*** 26,31 ****
---- 26,34 ----
+*** 478,484 ****
   
-  #include "PTBatcherGUI.h"
-  #include <wx/cshelp.h>
-+ #ifdef UNIX_SELF_CONTAINED_BUNDLE
-+ #include <wx/stdpaths.h>
-+ #endif
-  #ifdef __WXMSW__
-  #include <wx/stdpaths.h>
-  #endif
-***************
-*** 102,107 ****
---- 105,122 ----
-          }
+      ret_value = 0;
+      // use MyExternalCmdExecDialog
+!     ret_value = CPExecute(autopanoExe, autopanoArgs, _("finding control points"), parent);
   
-      }
-+ 
-+ #elif defined UNIX_SELF_CONTAINED_BUNDLE
-+     // initialize paths
-+     {
-+       wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
-+       exePath.RemoveLastDir();
-+       const wxString huginRoot(exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
-+       m_xrcPrefix = huginRoot + wxT("share/hugin/xrc/");
-+ 
-+       // locale setup
-+       m_locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
-+     }
-  #else
-      // add the locale directory specified during configure
-      m_xrcPrefix = wxT(INSTALL_XRC_DIR);
-diff -r -c hugin/src/hugin1/stitch_project/hugin_stitch_project.cpp hugin-new/src/hugin1/stitch_project/hugin_stitch_project.cpp
-*** hugin/src/hugin1/stitch_project/hugin_stitch_project.cpp	Thu Sep 27 16:36:55 2018
---- hugin-new/src/hugin1/stitch_project/hugin_stitch_project.cpp	Fri Nov  2 09:41:35 2018
-***************
-*** 29,37 ****
-  #include "panoinc.h"
+      if (ret_value == HUGIN_EXIT_CODE_CANCELLED) {
+          return cps;
+--- 484,490 ----
   
-  #include <wx/wfstream.h>
-! #ifdef __WXMSW__
-  #include <wx/stdpaths.h>
-! #endif
+      ret_value = 0;
+      // use MyExternalCmdExecDialog
+!     ret_value = CPExecute(autopanoExe, autopanoArgs, _("finding control points"), NULL /*parent*/);
   
-  #include <fstream>
-  #include <sstream>
---- 29,37 ----
-  #include "panoinc.h"
-  
-  #include <wx/wfstream.h>
-! //#ifdef __WXMSW__
-  #include <wx/stdpaths.h>
-! //#endif
-  
-  #include <fstream>
-  #include <sstream>
-***************
-*** 286,291 ****
---- 286,300 ----
-      // locale setup
-      m_locale.AddCatalogLookupPathPrefix(exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR) + wxT("share\\locale"));
-  
-+ #elif defined UNIX_SELF_CONTAINED_BUNDLE
-+     // initialize paths
-+     {
-+       wxFileName exePath(wxStandardPaths::Get().GetExecutablePath());
-+       exePath.RemoveLastDir();
-+       const wxString huginRoot=exePath.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
-+       // add the locale directory specified during configure
-+       m_locale.AddCatalogLookupPathPrefix(huginRoot + wxT("share/locale"));
-+     }
-  #else
-      // add the locale directory specified during configure
-      m_locale.AddCatalogLookupPathPrefix(wxT(INSTALL_LOCALE_DIR));
-diff -r -c hugin/src/hugin_config.h.in.cmake hugin-new/src/hugin_config.h.in.cmake
-*** hugin/src/hugin_config.h.in.cmake	Thu Sep 27 16:36:58 2018
---- hugin-new/src/hugin_config.h.in.cmake	Thu Sep 27 18:53:12 2018
-***************
-*** 31,34 ****
---- 31,37 ----
-  /* if using EGL for OpenGL initialization */
-  #cmakedefine HAVE_EGL 1
-  
-+ /* Build a fully self contained OSX bundle (with embedded ressources) */
-+ #cmakedefine UNIX_SELF_CONTAINED_BUNDLE 1
-+ 
-  #endif
+      if (ret_value == HUGIN_EXIT_CODE_CANCELLED) {
+          return cps;
