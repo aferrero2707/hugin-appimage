@@ -1,6 +1,6 @@
 diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp
 *** hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 19:12:42 2018
---- hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 23:35:05 2018
+--- hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 23:57:29 2018
 ***************
 *** 36,41 ****
 --- 36,42 ----
@@ -54,20 +54,3 @@ diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin
       if(setting.IsTwoStepDetector())
       {
           std::vector<wxString> keyFiles(pano.getNrOfImages());
-***************
-*** 478,484 ****
-  
-      ret_value = 0;
-      // use MyExternalCmdExecDialog
-!     ret_value = CPExecute(autopanoExe, autopanoArgs, _("finding control points"), parent);
-  
-      if (ret_value == HUGIN_EXIT_CODE_CANCELLED) {
-          return cps;
---- 496,502 ----
-  
-      ret_value = 0;
-      // use MyExternalCmdExecDialog
-!     ret_value = CPExecute(autopanoExe, autopanoArgs, _("finding control points"), NULL /*parent*/);
-  
-      if (ret_value == HUGIN_EXIT_CODE_CANCELLED) {
-          return cps;
