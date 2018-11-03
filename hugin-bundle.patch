@@ -112,6 +112,32 @@ diff -r -c hugin/src/hugin1/hugin/huginApp.cpp hugin-new/src/hugin1/hugin/huginA
   #else
       // add the locale directory specified during configure
       m_xrcPrefix = wxT(INSTALL_XRC_DIR);
+diff -r -c hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp
+*** hugin/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Thu Sep 27 16:36:55 2018
+--- hugin-new/src/hugin1/icpfind/AutoCtrlPointCreator.cpp	Sat Nov  3 17:39:43 2018
+***************
+*** 85,91 ****
+      else
+      {
+          wxString cmdline=prog+wxT(" ")+args;
+!         return wxExecute(cmdline,wxEXEC_SYNC | wxEXEC_MAKE_GROUP_LEADER);
+      };
+  };
+  
+--- 85,97 ----
+      else
+      {
+          wxString cmdline=prog+wxT(" ")+args;
+!         wxArrayString output;
+!         int ret = wxExecute(cmdline,output,wxEXEC_SYNC | wxEXEC_MAKE_GROUP_LEADER);
+!         std::cout << cmdline << std::endl;
+!         std::cout << "Output:" << std::endl;
+!         for ( size_t n=0; n < output.GetCount(); ++n )
+!           std::cout << output.Item(n) << std::endl;
+!         return ret;
+      };
+  };
+  
 diff -r -c hugin/src/hugin1/ptbatcher/PTBatcherGUI.cpp hugin-new/src/hugin1/ptbatcher/PTBatcherGUI.cpp
 *** hugin/src/hugin1/ptbatcher/PTBatcherGUI.cpp	Thu Sep 27 16:36:55 2018
 --- hugin-new/src/hugin1/ptbatcher/PTBatcherGUI.cpp	Sat Sep 29 11:53:49 2018
