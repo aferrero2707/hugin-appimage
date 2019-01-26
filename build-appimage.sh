@@ -100,7 +100,7 @@ echo ""
 if [ ! -e /work/hugin ]; then
 cd /work
 #rm -rf hugin
-hg clone http://hg.code.sf.net/p/hugin/hugin hugin || exit 1
+hg clone --verbose http://hg.code.sf.net/p/hugin/hugin -r 899a2acfda64 hugin || exit 1
 cd hugin || exit 1
 #patch -N -p1 < /sources/hugin-bundle.patch #|| exit 1
 rm -rf hugin-build
