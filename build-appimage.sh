@@ -105,6 +105,7 @@ cd /work
 #hg clone --verbose http://hg.code.sf.net/p/hugin/hugin -r fcbac34304f4f8becc1db9d257da61b0cd763e58 || exit 1 # 2019.0.0_rc1
 #hg clone --verbose http://hg.code.sf.net/p/hugin/hugin -r 22e4831af00ece14191adc7868b24caab1f053c6 || exit 1 # 2019.0.0
 hg clone --verbose http://hg.code.sf.net/p/hugin/hugin hugin || exit 1
+echo "Hugin cloned"
 cd hugin || exit 1
 #patch -N -p1 < /sources/hugin-bundle.patch #|| exit 1
 rm -rf hugin-build
@@ -115,7 +116,9 @@ cmake3 -DCMAKE_INSTALL_PREFIX=/usr/local \
 	-DBUILD_HSI:BOOL=OFF \
 	-DUSE_GDKBACKEND_X11:BOOL=ON \
 	-DUNIX_SELF_CONTAINED_BUNDLE:BOOL=ON ../ || exit 1
+echo "Hugin configured, now running make..."
 make -j 3 install || exit 1
+echo "Hugin compilation finished"
 cd ..
 fi
 
