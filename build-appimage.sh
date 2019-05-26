@@ -97,6 +97,7 @@ echo ""
 echo "Building and installing hugin"
 echo ""
 
+bash /sources/travis_wait.sh &
 if [ ! -e /work/hugin ]; then
 cd /work
 #rm -rf hugin
