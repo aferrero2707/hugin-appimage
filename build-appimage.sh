@@ -4,12 +4,12 @@ rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.
 rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
 yum repolist
 yum install -y centos-release-scl || exit 1
-yum install -y devtoolset-4-gcc devtoolset-4-gcc-c++ || exit 1
+yum install -y devtoolset-8-gcc devtoolset-8-gcc-c++ || exit 1
 
 #yum group install -y "Development Tools"
 (yum install -y autoconf automake libtool file patch make cmake3 mercurial bzip2 git gettext-devel fftw-devel exiv2-devel zlib-devel wget cairo libtiff-devel libjpeg-turbo-devel gtk2-devel OpenEXR-devel glew-devel libpano13-devel boost-devel lcms2-devel sqlite-devel libcroco-devel libxml2-devel gobject-introspection-devel cairo-gobject-devel gsl-devel) || exit 1
 
-source scl_source enable devtoolset-4
+source scl_source enable devtoolset-8
 
 
 #export PKG_CONFIG_PATH=
